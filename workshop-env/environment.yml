@@ -1,0 +1,40 @@
+# Shared software environment for the "Turning the Dial" workshop
+# (E. coli fluoroquinolone-resistance pipeline: fetch -> QC -> align -> inspect -> call -> annotate -> render).
+# Installed by install_env.sh into <workshop>/miniforge/envs/workshop; exact versions land in environment.lock.yml.
+name: workshop
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.12
+  # fetch
+  - ncbi-datasets-cli
+  - sra-tools
+  - wget
+  - curl
+  - pigz
+  # QC
+  - fastp
+  - seqkit
+  - fastqc
+  - multiqc
+  # align / inspect
+  - bwa-mem2
+  - minimap2
+  - samtools
+  - mosdepth
+  # call / annotate
+  - bcftools
+  - htslib
+  - bedtools
+  # workflow + render
+  - snakemake-minimal
+  - pandas
+  - numpy
+  - matplotlib
+  - seaborn
+  - pysam
+  - biopython
+  - r-base
+  - r-ggplot2
+  - jq

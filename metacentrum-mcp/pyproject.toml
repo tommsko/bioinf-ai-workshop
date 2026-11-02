@@ -1,0 +1,30 @@
+[project]
+name = "metacentrum-mcp"
+version = "0.2.0"
+description = "MCP gateway from agent harnesses to the MetaCentrum grid (PBS batch + interactive jobs over a persistent SSH gate)"
+readme = "README.md"
+authors = [
+    { name = "tomsko", email = "tomas.pavlik5055@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "mcp>=2.3.0",
+]
+
+[project.scripts]
+metacentrum-mcp = "metacentrum_mcp:main"
+
+[build-system]
+requires = ["uv_build>=0.13.1,<0.14.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+    "pytest-asyncio>=1.4.1",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "module"
+testpaths = ["tests"]

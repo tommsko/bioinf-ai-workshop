@@ -1,0 +1,18 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "servers": {
+      "metacentrum": {
+        "type": "local",
+        "command": [
+          "/home/your-local-user/.local/bin/metacentrum-mcp",
+          "serve"
+        ],
+        "environment": {
+          "METACENTRUM_MCP_MAX_WAIT": "120"
+        },
+        "timeout": 180000
+      }
+    }
+  }
+}

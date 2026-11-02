@@ -1,0 +1,65 @@
+# metacentrum-mcp configuration.
+# Default location: ~/.config/metacentrum-mcp/config.toml  (or set METACENTRUM_MCP_CONFIG)
+# Every option is optional; the values below are the defaults unless marked "example".
+
+[connection]
+host = "skirit.metacentrum.cz"       # any MetaCentrum frontend; skirit-lite is lighter for pure job management
+user = "alice"                        # example; empty = whatever ssh would use (~/.ssh/config, local username)
+# identity_file = "~/.ssh/id_ed25519" # example; otherwise ssh-agent / ssh config / Kerberos decide
+gssapi = true                         # forward a local Kerberos ticket (kinit alice@META) to the frontend
+strict_host_key_checking = "accept-new"
+control_persist = "4h"                # the shared connection lingers this long after the last use
+connect_timeout = 20
+command_timeout = 120
+auto_connect = true                   # tools reopen the connection on demand (never after an explicit disconnect)
+ssh_options = []                      # extra "-o" options, e.g. ["ProxyJump=bastion.example.org"]
+
+[workspace]
+project_root = "/storage/praha5-elixir/projects/bioinf-fi"
+user_dir = "{user}"                   # workspace = <project_root>/<user>, created on connect
+create_user_dir = true
+enforce = true                        # writes + job workdirs only inside write_roots (home is read-only here)
+read_roots = ["{workspace}", "{project_root}", "~"]
+write_roots = ["{workspace}"]
+local_roots = ["."]                   # local dirs upload/download may touch ("." = where the harness runs)
+
+[limits]
+max_walltime = "24:00:00"
+max_ncpus = 16
+max_mem_gb = 64
+max_scratch_gb = 200
+max_ngpus = 0
+allowed_queues = []                   # empty = no explicit -q (default routing), e.g. ["gpu@pbs-m1.metacentrum.cz"]
+max_active_jobs = 5                   # queued+running jobs submitted through this server
+max_submissions_per_hour = 30
+max_interactive_sessions = 2
+max_interactive_walltime = "04:00:00"
+max_read_bytes = 65536
+max_write_bytes = 1048576
+max_transfer_bytes = 2147483648
+max_output_lines = 500
+max_list_entries = 500
+max_wait_seconds = 25                 # longest a single tool call blocks; keep below the harness MCP timeout
+
+[defaults]
+# Used whenever the model does not specify a value; reported to it by the cluster_info tool.
+queue = "elixircz@pbs-m1.metacentrum.cz"   # ELIXIR CZ routing queue (needs the `elixir` group); "" = MetaCentrum default
+ncpus = 1
+mem = "4gb"
+walltime = "01:00:00"
+interactive_walltime = "01:00:00"
+scratch = "10gb"
+scratch_type = "local"
+# Sourced at the start of every batch job and interactive shell if it exists ("" disables).
+software_env = "/storage/praha5-elixir/projects/bioinf-fi/tomsko/workshop/activate.sh"
+notes = []                            # extra site facts for the model, e.g. ["Reference genomes are in /storage/.../refs"]
+
+[frontend_exec]
+enabled = true
+timeout = 30
+allowed_commands = ["module", "which", "ls", "stat", "file", "df", "quota", "klist",
+                    "hostname", "id", "qstat", "pbsnodes", "realpath"]
+
+# Exported before every remote command; values may reference remote variables.
+# [remote_env]
+# PATH = "/opt/pbs/bin:$PATH"
